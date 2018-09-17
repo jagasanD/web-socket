@@ -8,7 +8,9 @@ import com.websocket.model.Messages;
 import com.websocket.repository.MessageRepository;
 import com.websocket.repository.UserRepository;
 import com.websocket.service.MessageService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MessageServiceImpl implements MessageService{
 
 	@Autowired
