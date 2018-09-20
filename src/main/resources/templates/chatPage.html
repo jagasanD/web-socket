@@ -913,9 +913,20 @@
                 stompClient.connect({}, function (frame) {
                     //  setConnected(true);
                     // console.log('Connected: ' + frame);
-                    /*   stompClient.subscribe('/topic/user/'+loggedInUsr.id, function (greeting) {
-                     showGreeting(JSON.parse(greeting.body).content);
-                     });*/
+                      stompClient.subscribe('/topic/user/'+loggedInUsr.id, function (greeting) {
+                      
+                    // showGreeting(JSON.parse(greeting.body).content);
+                     var msg=JSON.parse(greeting.body);
+                     console.log(msg);
+                     
+                       var recivedTemp = '<li class="replies">' +
+                                        '<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="">' +
+                                        '<p>'+msg.message+'</p>' +
+                                        '</li>'
+                                $('.msgTemp').append(recivedTemp);
+                     
+                     
+                     });
                 });
 
                 // onload get the list of users
@@ -1016,7 +1027,7 @@
             }
 
             function sendMessage() {
-                stompClient.send("/app/user", {}, JSON.stringify({'name': $("#name").val()}));
+                //stompClient.send("/app/user", {}, JSON.stringify({'name': $("#name").val()}));
             }
 
 
@@ -1057,6 +1068,7 @@
 
             function newMessage() {
                 message = $(".message-input input").val();
+                
                 if ($.trim(message) == '') {
                     return false;
                 }
@@ -1065,12 +1077,12 @@
                 $('.contact.active .preview').html('<span>You: </span>' + message);
                 $(".messages").animate({scrollTop: $(document).height()}, "fast");
                 
-                
+                console.log("-------------message-----"+message);
                 
                  var jsondata = {
                     'sendBy': loggedInUsr.id,
                     'reciviedBy': recivedBy1,
-                    'message':$(".message-input input").val()
+                    'message': message
                 }
                 $.ajax({
                     url: '/save-message',
