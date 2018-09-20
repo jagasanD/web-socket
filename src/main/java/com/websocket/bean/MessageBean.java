@@ -1,29 +1,18 @@
 package com.websocket.bean;
 
+import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class MessageBean {
 
-	private Long sendBy;
-	private Long reciviedBye;
-	private String message;
-	
-	
-	public Long getSendBy() {
-		return sendBy;
-	}
-	public void setSendBy(Long sendBy) {
-		this.sendBy = sendBy;
-	}
-	public Long getReciviedBye() {
-		return reciviedBye;
-	}
-	public void setReciviedBye(Long reciviedBye) {
-		this.reciviedBye = reciviedBye;
-	}
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	
+    private Long sendBy;
+    private Long reciviedBy;
+    private String message;
+    private Date createDate;
+    private Date updatedDate;
+    private Boolean isSeen = Boolean.FALSE;
+
 }

@@ -1,8 +1,7 @@
-
 package com.websocket.controller;
 
-
 import com.websocket.bean.GenericResponse;
+import com.websocket.bean.MessageBean;
 import com.websocket.bean.UserBean;
 import com.websocket.model.AppUser;
 import com.websocket.model.UserResponse;
@@ -26,19 +25,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin
 public class UserController {
 
-     @Autowired
+    @Autowired
     SimpMessagingTemplate template;
-    
-     @Autowired
+
+    @Autowired
     LoginService loginService;
-    
+
     @GetMapping("/")
     public String loginForm() {
         System.out.println(" login forms------------------------");
         return "login.html";
 
     }
-    
+
     @PostMapping("/login")
     public ResponseEntity<GenericResponse> loginUser(@RequestBody UserBean bean) {
         try {
@@ -53,9 +52,53 @@ public class UserController {
         }
 
     }
-   @GetMapping("/chat-app")
-   public String chatApp() {
-       return "chatPage.html";
+
+    @GetMapping("/get-user-list")
+    public ResponseEntity<GenericResponse> getUserList() {
+        try {
+            System.out.println(" ----------user list controller-----------------------");
+            GenericResponse reponse = loginService.getUsers();
+            return new ResponseEntity<>(reponse, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            GenericResponse reponse = new GenericResponse("AUNAUTHORIZED USER ", "Something went wrong");
+            return new ResponseEntity<>(reponse, HttpStatus.CONFLICT);
+        }
+
+    }
+
+    @GetMapping("/chat-app")
+    public String chatApp() {
+        return "chatPage.html";
+    }
+
+    @PostMapping("/get-single-chat-message")
+    public ResponseEntity<GenericResponse> getPrivateMessage(@RequestBody MessageBean bean) {
+        try {
+            System.out.println(" ----------getPrivateMessage controller-----------------------");
+            GenericResponse reponse = loginService.getPrivateMessage(bean);
+            return new ResponseEntity<>(reponse, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            GenericResponse reponse = new GenericResponse("AUNAUTHORIZED USER ", "Something went wrong");
+            return new ResponseEntity<>(reponse, HttpStatus.CONFLICT);
+        }
+
+    }
+    
+    @PostMapping("/save-message")
+      public ResponseEntity<GenericResponse> saveMessage(@RequestBody MessageBean bean) {
+        try {
+            System.out.println(" ----------save message controller-----------------------");
+             template.convertAndSend("/topic/user/"+bean.getReciviedBy(),bean);
+            GenericResponse reponse = loginService.saveMessage(bean);
+            return new ResponseEntity<>(reponse, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            GenericResponse reponse = new GenericResponse("AUNAUTHORIZED USER ", "Something went wrong");
+            return new ResponseEntity<>(reponse, HttpStatus.CONFLICT);
+        }
+
     }
 
     @MessageMapping("/user") // getting data from client side(browser)

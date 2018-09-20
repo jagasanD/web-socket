@@ -26,7 +26,9 @@ url: '/login',
         success: function (data) {
             console.log("--------sucess data------");
             console.log(data.payLoad);
-            localStorage.setItem("auth",data);
+          
+            localStorage.setItem("auth",JSON.stringify(data.payLoad));
+          //  alert(JSON.stringify(localStorage.getItem("auth")));
              window.location.href="/chat-app";
         }
 });

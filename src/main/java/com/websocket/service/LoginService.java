@@ -6,6 +6,7 @@
 package com.websocket.service;
 
 import com.websocket.bean.GenericResponse;
+import com.websocket.bean.MessageBean;
 import com.websocket.bean.UserBean;
 
 /**
@@ -15,5 +16,11 @@ import com.websocket.bean.UserBean;
 public interface LoginService {
 
     public GenericResponse validateUser(UserBean bean);
+
+    public GenericResponse getUsers();
+
+    public GenericResponse getPrivateMessage(MessageBean bean);
+
+    public GenericResponse saveMessage(MessageBean bean);
     
 }
