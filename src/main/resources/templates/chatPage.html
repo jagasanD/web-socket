@@ -694,20 +694,7 @@
                 outline: none;
             }
         </style></head><body>
-        <!-- 
-        
-        A concept for a chat interface. 
-        
-        Try writing a new message! :)
-        
-        
-        Follow me here:
-        Twitter: https://twitter.com/thatguyemil
-        Codepen: https://codepen.io/emilcarlsson/
-        Website: http://emilcarlsson.se/
-        
-        -->
-
+    
         <div id="frame">
             <div id="sidepanel">
                 <!--		<div id="profile">
@@ -911,21 +898,14 @@
                 var socket = new SockJS('/ws');
                 stompClient = Stomp.over(socket);
                 stompClient.connect({}, function (frame) {
-                    //  setConnected(true);
-                    // console.log('Connected: ' + frame);
                     stompClient.subscribe('/topic/user/' + loggedInUsr.id, function (greeting) {
-
-                        // showGreeting(JSON.parse(greeting.body).content);
                         var msg = JSON.parse(greeting.body);
                         console.log(msg);
-
                         var recivedTemp = '<li class="replies">' +
                                 '<p>' + msg.message + '</p>' +
                                 '</li>'
                         $('.msgTemp').append(recivedTemp);
                         $(".messages").animate({scrollTop: $(document).height()}, "fast");
-
-
                     });
                 });
 
@@ -957,13 +937,14 @@
                         $('.appendUser').append(temp);
                     });
 
-                }
-                ;
+                };
             });
 
             function onClickLoadData(sendBy, recivedBy) {
 
+                //create dynaic id 
                 var userId = "#user" + recivedBy;
+                //dynamic add active class 
                 $('.appendUser li.active').removeClass('active');
                 $(userId).addClass('active');
                 
@@ -972,13 +953,6 @@
                 var userImg = $(userId+" img").attr('src');
                 $("#profileName").text(userName);
                 $("#proImageID").attr('src', userImg);
-                
-                console.log("-----------img src---"+userImg);
-                
-              //  console.log("----name---"+userName+"-----userEmail----"+userEmail+"--img--"+userimg);
-                
-                console.log($(userId+" p:first").text())
-
                 recivedBy1 = recivedBy;
 
                 var jsondata = {
@@ -992,7 +966,6 @@
                     contentType: 'application/json',
                     data: JSON.stringify(jsondata),
                     success: function (data) {
-                        console.log("--------sucess data------");
                         console.log(data.payLoad);
                         $('.msgTemp').html('');
                         $.each(data.payLoad, function () {
@@ -1000,7 +973,7 @@
                             if (this.sendBy == sendBy) {
                                 var sendTem = '<li class="sent">' +
                                         '<p>' + this.message + '</p>'
-                                '</li>'
+                                         '</li>'
                                 $('.msgTemp').append(sendTem);
 
                             } else {
@@ -1019,7 +992,7 @@
                 if (stompClient !== null) {
                     stompClient.disconnect();
                 }
-                setConnected(false);
+             //   setConnected(false);
                 console.log("Disconnected");
             }
 
@@ -1034,7 +1007,6 @@
                 if ($.trim(message) == '') {
                     return false;
                 }
-                //   $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
                 $('<li class="sent"><p>' + message + '</p></li>').appendTo($('.messages ul'));
                 $('.message-input input').val(null);
                 $('.contact.active .preview').html('<span>You: </span>' + message);
@@ -1059,8 +1031,7 @@
                         });
                     }
                 });
-            }
-            ;
+            };
 
             $('.submit').click(function () {
                 newMessage();
@@ -1072,45 +1043,6 @@
                     return false;
                 }
             });
-
-
-
-            /*     $("#profile-img").click(function () {
-             $("#status-options").toggleClass("active");
-             });
-             
-             $(".expand-button").click(function () {
-             $("#profile").toggleClass("expanded");
-             $("#contacts").toggleClass("expanded");
-             });
-             
-             $("#status-options ul li").click(function () {
-             $("#profile-img").removeClass();
-             $("#status-online").removeClass("active");
-             $("#status-away").removeClass("active");
-             $("#status-busy").removeClass("active");
-             $("#status-offline").removeClass("active");
-             $(this).addClass("active");
-             
-             if ($("#status-online").hasClass("active")) {
-             $("#profile-img").addClass("online");
-             } else if ($("#status-away").hasClass("active")) {
-             $("#profile-img").addClass("away");
-             } else if ($("#status-busy").hasClass("active")) {
-             $("#profile-img").addClass("busy");
-             } else if ($("#status-offline").hasClass("active")) {
-             $("#profile-img").addClass("offline");
-             } else {
-             $("#profile-img").removeClass();
-             }
-             ;
-             
-             $("#status-options").removeClass("active");
-             });*/
-
-
-
-
         </script>
     </body>
 </html>
