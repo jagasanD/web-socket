@@ -848,8 +848,8 @@
             </div>
             <div class="content">
                 <div class="contact-profile">
-                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                    <p>Harvey Specter</p>
+                    <img id="proImageID" src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+                    <p id="profileName">Harvey Specter</p>
                     <div class="social-media">
                         <i class="fa fa-facebook" aria-hidden="true"></i>
                         <i class="fa fa-twitter" aria-hidden="true"></i>
@@ -903,8 +903,8 @@
         </div>
 
         <script >
-        var recivedBy1=null;
-         var loggedInUsr=JSON.parse(localStorage.getItem("auth"));
+            var recivedBy1 = null;
+            var loggedInUsr = JSON.parse(localStorage.getItem("auth"));
             var stompClient = null;
             $(document).ready(function () {
                 // create socket object and connect to server and also subscribe
@@ -913,20 +913,20 @@
                 stompClient.connect({}, function (frame) {
                     //  setConnected(true);
                     // console.log('Connected: ' + frame);
-                      stompClient.subscribe('/topic/user/'+loggedInUsr.id, function (greeting) {
-                      
-                    // showGreeting(JSON.parse(greeting.body).content);
-                     var msg=JSON.parse(greeting.body);
-                     console.log(msg);
-                     
-                       var recivedTemp = '<li class="replies">' +
-                                        '<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="">' +
-                                        '<p>'+msg.message+'</p>' +
-                                        '</li>'
-                                $('.msgTemp').append(recivedTemp);
-                     
-                     
-                     });
+                    stompClient.subscribe('/topic/user/' + loggedInUsr.id, function (greeting) {
+
+                        // showGreeting(JSON.parse(greeting.body).content);
+                        var msg = JSON.parse(greeting.body);
+                        console.log(msg);
+
+                        var recivedTemp = '<li class="replies">' +
+                                '<p>' + msg.message + '</p>' +
+                                '</li>'
+                        $('.msgTemp').append(recivedTemp);
+                        $(".messages").animate({scrollTop: $(document).height()}, "fast");
+
+
+                    });
                 });
 
                 // onload get the list of users
@@ -937,25 +937,13 @@
                     dataType: 'json',
                     contentType: 'application/json',
                     success: function (data) {
-//                        console.log("--------sucess data------");
-//                        console.log(data.payLoad);
                         appedUser(data);
                     }
                 });
 
                 function appedUser(data) {
-
                     var jdata = JSON.parse(localStorage.getItem("auth"));
-                    console.log(jdata);
-
-
                     $.each(data.payLoad, function () {
-                        // console.log("ID: " + this.id);
-                        //   console.log("First Name: " + this.firstName);
-                        //   console.log("Last Name: " + this.lastName);
-                        //   console.log(" ");
-
-
                         var temp = '<li class="contact" id=\"user' + this.id + '\">' +
                                 '<div class="wrap" onclick="onClickLoadData(' + jdata.id + ',' + this.id + ')">' +
                                 '<span class="contact-status online"></span>' +
@@ -971,13 +959,28 @@
 
                 }
                 ;
-
-
             });
 
             function onClickLoadData(sendBy, recivedBy) {
-                recivedBy1=recivedBy;
-               
+
+                var userId = "#user" + recivedBy;
+                $('.appendUser li.active').removeClass('active');
+                $(userId).addClass('active');
+                
+                // set chat box header name and value 
+                var userName =$(userId+" p:first").text();
+                var userImg = $(userId+" img").attr('src');
+                $("#profileName").text(userName);
+                $("#proImageID").attr('src', userImg);
+                
+                console.log("-----------img src---"+userImg);
+                
+              //  console.log("----name---"+userName+"-----userEmail----"+userEmail+"--img--"+userimg);
+                
+                console.log($(userId+" p:first").text())
+
+                recivedBy1 = recivedBy;
+
                 var jsondata = {
                     'sendBy': sendBy,
                     'reciviedBy': recivedBy
@@ -991,31 +994,25 @@
                     success: function (data) {
                         console.log("--------sucess data------");
                         console.log(data.payLoad);
+                        $('.msgTemp').html('');
                         $.each(data.payLoad, function () {
 
                             if (this.sendBy == sendBy) {
                                 var sendTem = '<li class="sent">' +
-                                        '<img src="http://emilcarlsson.se/assets/mikeross.png" alt="">' +
                                         '<p>' + this.message + '</p>'
                                 '</li>'
                                 $('.msgTemp').append(sendTem);
 
-                            } else{
-
+                            } else {
                                 var recivedTemp = '<li class="replies">' +
-                                        '<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="">' +
                                         '<p>' + this.message + '</p>' +
                                         '</li>'
                                 $('.msgTemp').append(recivedTemp);
                             }
                         });
+                        $(".messages").animate({scrollTop: $(document).height()}, "fast");
                     }
                 });
-
-//                console.log("----------send by-----" + sendBy);
-//                console.log("----------recived by-----" + recivedBy);
-
-
             }
 
             function disconnect() {
@@ -1029,57 +1026,21 @@
             function sendMessage() {
                 //stompClient.send("/app/user", {}, JSON.stringify({'name': $("#name").val()}));
             }
-
-
-
             $(".messages").animate({scrollTop: $(document).height()}, "fast");
-            $("#profile-img").click(function () {
-                $("#status-options").toggleClass("active");
-            });
-
-            $(".expand-button").click(function () {
-                $("#profile").toggleClass("expanded");
-                $("#contacts").toggleClass("expanded");
-            });
-
-            $("#status-options ul li").click(function () {
-                $("#profile-img").removeClass();
-                $("#status-online").removeClass("active");
-                $("#status-away").removeClass("active");
-                $("#status-busy").removeClass("active");
-                $("#status-offline").removeClass("active");
-                $(this).addClass("active");
-
-                if ($("#status-online").hasClass("active")) {
-                    $("#profile-img").addClass("online");
-                } else if ($("#status-away").hasClass("active")) {
-                    $("#profile-img").addClass("away");
-                } else if ($("#status-busy").hasClass("active")) {
-                    $("#profile-img").addClass("busy");
-                } else if ($("#status-offline").hasClass("active")) {
-                    $("#profile-img").addClass("offline");
-                } else {
-                    $("#profile-img").removeClass();
-                }
-                ;
-
-                $("#status-options").removeClass("active");
-            });
 
             function newMessage() {
                 message = $(".message-input input").val();
-                
+
                 if ($.trim(message) == '') {
                     return false;
                 }
-                $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+                //   $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+                $('<li class="sent"><p>' + message + '</p></li>').appendTo($('.messages ul'));
                 $('.message-input input').val(null);
                 $('.contact.active .preview').html('<span>You: </span>' + message);
                 $(".messages").animate({scrollTop: $(document).height()}, "fast");
-                
-                console.log("-------------message-----"+message);
-                
-                 var jsondata = {
+
+                var jsondata = {
                     'sendBy': loggedInUsr.id,
                     'reciviedBy': recivedBy1,
                     'message': message
@@ -1094,10 +1055,10 @@
                         console.log("--------sucess data------");
                         console.log(data.payLoad);
                         $.each(data.payLoad, function () {
-                            
+
                         });
                     }
-                });  
+                });
             }
             ;
 
@@ -1111,7 +1072,45 @@
                     return false;
                 }
             });
-            //# sourceURL=pen.js
+
+
+
+            /*     $("#profile-img").click(function () {
+             $("#status-options").toggleClass("active");
+             });
+             
+             $(".expand-button").click(function () {
+             $("#profile").toggleClass("expanded");
+             $("#contacts").toggleClass("expanded");
+             });
+             
+             $("#status-options ul li").click(function () {
+             $("#profile-img").removeClass();
+             $("#status-online").removeClass("active");
+             $("#status-away").removeClass("active");
+             $("#status-busy").removeClass("active");
+             $("#status-offline").removeClass("active");
+             $(this).addClass("active");
+             
+             if ($("#status-online").hasClass("active")) {
+             $("#profile-img").addClass("online");
+             } else if ($("#status-away").hasClass("active")) {
+             $("#profile-img").addClass("away");
+             } else if ($("#status-busy").hasClass("active")) {
+             $("#profile-img").addClass("busy");
+             } else if ($("#status-offline").hasClass("active")) {
+             $("#profile-img").addClass("offline");
+             } else {
+             $("#profile-img").removeClass();
+             }
+             ;
+             
+             $("#status-options").removeClass("active");
+             });*/
+
+
+
+
         </script>
     </body>
 </html>

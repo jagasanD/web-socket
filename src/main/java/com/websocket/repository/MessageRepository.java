@@ -11,6 +11,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface MessageRepository extends JpaRepository<Message, Long>{
     
-    List<Message> findBySendByIdAndRecivedByIdOrSendByIdAndRecivedById(Long sendById,Long recivedById,Long recivedById1,Long sendById1);
+    List<Message> findBySendByIdAndRecivedByIdOrSendByIdAndRecivedByIdOrderById(Long sendById,Long recivedById,Long recivedById1,Long sendById1);
     
 }

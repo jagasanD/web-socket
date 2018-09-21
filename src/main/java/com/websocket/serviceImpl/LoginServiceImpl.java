@@ -79,10 +79,11 @@ public class LoginServiceImpl implements LoginService{
     @Override
     public GenericResponse getPrivateMessage(MessageBean bean) {
        
-        List<Message> messages = messageRepository.findBySendByIdAndRecivedByIdOrSendByIdAndRecivedById(bean.getSendBy(),bean.getReciviedBy(),bean.getReciviedBy(),bean.getSendBy());
+        List<Message> messages = messageRepository.findBySendByIdAndRecivedByIdOrSendByIdAndRecivedByIdOrderById(bean.getSendBy(),bean.getReciviedBy(),bean.getReciviedBy(),bean.getSendBy());
         List<MessageBean> msgList = new ArrayList<>();
         messages.forEach((msg)-> {
         MessageBean mbean = new MessageBean();
+        mbean.setId(msg.getId());
         mbean.setCreateDate(msg.getCreateDate());
         mbean.setIsSeen(msg.getIsSeen());
         mbean.setMessage(msg.getMessage());

@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class MessageBean {
 
+    private Long id;
     private Long sendBy;
     private Long reciviedBy;
     private String message;
